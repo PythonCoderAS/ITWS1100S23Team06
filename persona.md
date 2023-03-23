@@ -1,0 +1,1 @@
+An RPI student John Doe uses this interface to keep track of his course scheduling this semester. He built his schedule in Quacs, and exported the ics file in order to upload it to this interface. Now John uses this dashboard on a daily basis to dynamically keep track of the time, when his classes are, and anticipate the weather.
