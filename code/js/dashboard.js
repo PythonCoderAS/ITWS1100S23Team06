@@ -113,10 +113,78 @@ const dashboard = {
             reader.readAsText(file);
         });
     },
-    generateSettingsPage: function() {
+    showSettingsPage: function() {
         // Todo: Generate the settings page.
     },
-    generateDashboard: function() {
+    showDashboard: function() {
         // Todo: Generate the dashboard.
+    },
+    updateWeather: function() {
+        // Get the weather.
+        weather.getWeather().then(
+            function (data) {
+                // Update the weather.
+                // Todo: Implement this.
+                // This can be rain, clear, clouds, etc.
+                const typeOfWeather = data.weather[0].main;
+            }
+        ).catch(
+            function (error) {
+                alert("Error getting weather: " + error)
+            }
+        )
+    }
+}
+
+const weather = {
+    apiKey: "06620284fbc3c236120f41a84c7eb316",
+    zipCode: "12180",
+    country: "US",
+    units: "imperial",
+    getWeather: function() {
+        return new Promise((resolve, reject) => {
+            $.ajax(`https://api.openweathermap.org/data/2.5/weather?zip=${this.zipCode},${this.country}&appid=${this.apiKey}&units=${this.units}`, {
+                dataType: "json",
+                success: resolve,
+                error: reject
+            })
+        })
+    },
+}
+
+const courses = {
+    courseData: {},
+    userCourses: [],
+    getCurrentSemesterNumber: function() {
+        /**
+         * QUACS stores semester data in this format:
+         * YYYYMM
+         * 
+         * YYYY is the year of the semester.
+         * MM is one of the following:
+         * 
+         * - 01: Spring Semester
+         * - 05: Summer Semester
+         * - 09: Fall Semester
+         */
+        let date = new Date();
+        if (date.getMonth() < 4) {
+            // If the month is before May (0-index), it is the spring semester.
+            return date.getFullYear() + "01";
+        } else if (date.getMonth() < 8) {
+            // If the month is before September (0-index), it is the summer semester.
+            return date.getFullYear() + "05";
+        } else {
+            // If the month is after September (0-index), it is the fall semester.
+            return date.getFullYear() + "09";
+        }
+    },
+    getCourses: function(semesterNo) {
+        $.ajax(`https://raw.githubusercontent.com/quacs/quacs-data/master/semester_data/${semesterNo}/courses.json`, {
+            dataType: "json",
+            success: function(data) {
+                // Todo: Implement
+            }
+        })
     }
 }
