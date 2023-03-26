@@ -344,6 +344,14 @@ const dashboard = {
           courses.saveUserCourses();
         });
     },
+    /**
+     * Get the user's courses for a specific day.
+     * @param {DayOfWeek} day 
+     * @returns {CourseSchedule[]}
+     */
+    getUserCourses: function (day){
+      return this.courseSchedules[day] || [];
+    },
     getRemainingUserCoursesForToday: function() {
       // Get the current day of the week.
       let dayOfWeek = new Date().getDay();
