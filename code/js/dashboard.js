@@ -178,6 +178,123 @@ const dashboard = {
       })
     },
   }
+
+  const DateTimeUtils = {
+    /**
+     * @typedef {"Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday "} DayOfWeekLong
+     * @typedef {"January" | "February" | "March" | "April" | "May" | "June" | "July" | "August" | "September" | "October" | "November" | "December"} MonthLong
+     */
+    /**
+     * @typedef {Object} DateTime
+     * @property {MonthLong} monthName The name of the month.
+     * @property {number} month The month number, starting at 1 for January.
+     * @property {number} day The day of the month, starting at 1.
+     * @property {DayOfWeekLong} weekdayName
+     * @property {number} weekdayNum 0 is Sunday, 1 is Monday, etc.
+     * @property {number} year
+     * @property {number} hour 24 hour time.
+     * @property {number} minute
+     * @property {number} second
+     * @property {number} hour12
+     * @property {bool} isPm Whether or not it is PM (hour >= 12).
+     */
+    /**
+     * @returns {DateTime}
+     */
+    getCurrentDateTimeInNewYork: function() {
+      const formattedString = Intl.DateTimeFormat("en-US", {
+        timeZone: "America/New_York",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        weekday: "long",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        hour12: false}).formatToParts(new Date());
+      let monthNum;
+      switch (formattedString[2].value) {
+        case "January":
+          monthNum = 1;
+          break;
+        case "February":
+          monthNum = 2;
+          break;
+        case "March":
+          monthNum = 3;
+          break;
+        case "April":
+          monthNum = 4;
+          break;
+        case "May":
+          monthNum = 5;
+          break;
+        case "June":
+          monthNum = 6;
+          break;
+        case "July":
+          monthNum = 7;
+          break;
+        case "August":
+          monthNum = 8;
+          break;
+        case "September":
+          monthNum = 9;
+          break;
+        case "October":
+          monthNum = 10;
+          break;
+        case "November":
+          monthNum = 11;
+          break;
+        case "December":
+          monthNum = 12;
+          break;
+      }
+      let weekNum;
+      switch (formattedString[0].value) {
+        case "Monday":
+          weekNum = 1;
+          break;
+        case "Tuesday":
+          weekNum = 2;
+          break;
+        case "Wednesday":
+          weekNum = 3;
+          break;
+        case "Thursday":
+          weekNum = 4;
+          break;
+        case "Friday":
+          weekNum = 5;
+          break;
+        case "Saturday":
+          weekNum = 6;
+          break;
+        case "Sunday":
+          weekNum = 0;
+          break;
+      }
+      const day = parseInt(formattedString[4].value);
+      const year = parseInt(formattedString[6].value);
+      const hour = parseInt(formattedString[8].value);
+      const minute = parseInt(formattedString[10].value);
+      const second = parseInt(formattedString[12].value);
+      return {
+        monthName: formattedString[0].value,
+        month: parseInt(formattedString[2].value),
+        day: day,
+        weekdayName: formattedString[0].value,
+        weekdayNum: weekNum,
+        year: year,
+        hour: hour,
+        minute: minute,
+        second: second,
+        hour12: hour % 12,
+        isPm: hour >= 12
+      }
+    }
+  }
   
   const courses = {
     /**
@@ -215,15 +332,15 @@ const dashboard = {
        * - 05: Summer Semester
        * - 09: Fall Semester
        */
-      let date = new Date();
-      if (date.getMonth() < 4) {
-        // If the month is before May (0-index), it is the spring semester.
+      let date = DateTimeUtils.getCurrentDateTimeInNewYork();
+      if (date.month < 5) {
+        // If the month is before May, it is the spring semester.
         return date.getFullYear() + "01";
-      } else if (date.getMonth() < 8) {
-        // If the month is before September (0-index), it is the summer semester.
+      } else if (date.month < 9) {
+        // If the month is in May or after May but before September, it is the summer semester.
         return date.getFullYear() + "05";
       } else {
-        // If the month is after September (0-index), it is the fall semester.
+        // If the month is after September, it is the fall semester.
         return date.getFullYear() + "09";
       }
     },
@@ -354,7 +471,8 @@ const dashboard = {
     },
     getRemainingUserCoursesForToday: function() {
       // Get the current day of the week.
-      let dayOfWeek = new Date().getDay();
+      const currentDateTime = DateTimeUtils.getCurrentDateTimeInNewYork();
+      let dayOfWeek = currentDateTime.weekdayNum;
       // Convert the day of week to our format.
       /** @type {DayOfWeek} */
       let dayOfWeekStr;
@@ -378,7 +496,7 @@ const dashboard = {
           return [];
       }
       // Get the current time.
-      let currentTime = new Date().getHours() * 100 + new Date().getMinutes();
+      let currentTime = currentDateTime.hour * 100 + currentDateTime.minute;
       // Filter the courses to only include the ones that have not started yet.
       return (this.courseSchedules[dayOfWeekStr] || []).filter(course => course.start > currentTime);
     },
