@@ -10,9 +10,26 @@ const dashboard = {
      * @property {boolean} useGradientColors Whether to use gradient colors for the theme if set to "timeOfDay".
      */
     /**
+     * @typedef {Object} SingleCourseSchedule
+     * @property {string} name The name of the course.
+     * @property {[string, number]} code The code of the course in the ["DEPARTMENTNO", NUMBER] form.
+     * @property {number} start The start time of the course in military time.
+     * @property {number} end The end time of the course in military time.
+     */
+    /**
+     * @typedef {"mon" | "tue" | "wed" | "thu" | "fri"} DayOfWeek
+     * @typedef {Record<DayOfWeek, SingleCourseSchedule[] | undefined>} CourseSchedules
+     */
+    /**
+     * @typedef {Object} Courses
+     * @property {number[]} userCourses
+     * @property {CourseSchedules} courseSchedules
+     */
+    /**
      * @typedef {Object} Config
      * @property {Component[]} componentsToShow The components to show in the dashboard.
      * @property {Theme} theme The theme to use.
+     * @property {Courses} courses Course data
      **/
     /**
      * The default config.
@@ -60,6 +77,18 @@ const dashboard = {
          * Has no effect if the mode is any other values.
          */
         useGradientColors: true
+      },
+      courses: {
+        /**
+         * An array of user CRNs
+         */
+        userCourses: [],
+        /**
+         * An object of course schedules.
+         * Has 5 keys: "mon", "tue", "wed", "thu", "fri".
+         * Each key has an array of course schedules. A course schedule has a `name`, `code`, `start` and `end` time.
+         */
+        courseSchedules: {},
       }
     },
     /**
@@ -70,6 +99,7 @@ const dashboard = {
     init: function() {
       if (currentConfig === null) {
         currentConfig = this.loadConfig();
+        
       }
       this.generateDashboard();
     },
@@ -87,23 +117,24 @@ const dashboard = {
       }
       return config;
     },
-    getConfig: function(path) {
-      // Get the value of "path" from the config.
-      // In order to access nested values in the config, use dot notation.
-      // For example, to get the current theme mode, we would supply
-      // path as "theme.mode".
-      let configValue = this.currentConfig;
-      let defaultConfigValue = this.defaultConfig;
-      let pathParts = path.split(".");
-      for (const part of pathParts) {
-        configValue = configValue[part];
-        defaultConfigValue = defaultConfigValue[part];
-        if (configValue === undefined) {
-          // If the config value is not found, we start using the default config value.
-          configValue = defaultConfigValue;
+    mergeWithDefaultConfig: function(root, defaultConfigRoot) {
+      // Merges the stored config with the default config.
+      if (root === undefined){
+        root = this.currentConfig;
+      }
+      if (defaultConfigRoot === undefined){
+        defaultConfigRoot = this.defaultConfig;
+      }
+      for (const key of Object.keys(defaultConfigRoot)){
+        if (Object.keys(defaultConfigRoot[key]).length > 0 && !Array.isArray(defaultConfigRoot[key])){
+          root[key] = root[key] || {};
+          dashboard.mergeWithDefaultConfig(root[key], defaultConfigRoot[key]);
+        } else {
+          if (!Object.keys(root).includes(key)){
+            root[key] = defaultConfigRoot[key];
+          }
         }
       }
-      return configValue;
     },
     saveConfig: function() {
       // Save the config to the local storage as JSON.
@@ -141,10 +172,12 @@ const dashboard = {
       });
     },
     showSettingsPage: function() {
-      // Todo: Generate the settings page.
+      $("#settings").show(0)
+      $("#dashboard").hide(0)
     },
     showDashboard: function() {
-      // Todo: Generate the dashboard.
+      $("#dashboard").show(0)
+      $("#settings").hide(0)
     },
     updateWeather: function() {
       // Get the weather.
@@ -281,8 +314,8 @@ const dashboard = {
       const minute = parseInt(formattedString[10].value);
       const second = parseInt(formattedString[12].value);
       return {
-        monthName: formattedString[0].value,
-        month: parseInt(formattedString[2].value),
+        monthName: formattedString[2].value,
+        month: monthNum,
         day: day,
         weekdayName: formattedString[0].value,
         weekdayNum: weekNum,
@@ -297,29 +330,6 @@ const dashboard = {
   }
   
   const courses = {
-    /**
-     * An array of user CRNs
-     * @type {number[]}
-     */
-    userCourses: [],
-    /**
-     * @typedef {Object} SingleCourseSchedule
-     * @property {string} name The name of the course.
-     * @property {[string, number]} code The code of the course in the ["DEPARTMENTNO", NUMBER] form.
-     * @property {number} start The start time of the course in military time.
-     * @property {number} end The end time of the course in military time.
-     */
-    /**
-     * @typedef {"mon" | "tue" | "wed" | "thu" | "fri"} DayOfWeek
-     * @typedef {Record<DayOfWeek, SingleCourseSchedule[] | undefined>} CourseSchedules
-     */
-    /**
-     * An object of course schedules.
-     * Has 5 keys: "mon", "tue", "wed", "thu", "fri".
-     * Each key has an array of course schedules. A course schedule has a `name`, `code`, `start` and `end` time.
-     * @type {CourseSchedules}
-     */
-    courseSchedules: {},
     getCurrentSemesterNumber: function() {
       /**
        * QUACS stores semester data in this format:
@@ -362,22 +372,6 @@ const dashboard = {
         })
       })
     },
-    loadUserCourses: function() {
-      // Get the user's courses from the local storage.
-      let userCourses = localStorage.getItem("userCourses");
-      if (userCourses !== null) {
-        this.userCourses = JSON.parse(userCourses);
-      }
-      let courseSchedulesStr = localStorage.getItem("courseSchedules");
-      if (courseSchedulesStr !== null) {
-        this.courseSchedules = JSON.parse(courseSchedulesStr);
-      }
-    },
-    saveUserCourses: function() {
-      // Save the user's courses to the local storage.
-      localStorage.setItem("userCourses", JSON.stringify(this.userCourses));
-      localStorage.setItem("courseSchedules", JSON.stringify(this.courseSchedules));
-    },
     determineCourseSchedule: function() {
       let semesterNo = this.getCurrentSemesterNumber();
       this.getCourseData(semesterNo).then(
@@ -416,7 +410,7 @@ const dashboard = {
             sections.push(...course.sections);
           }
           // Filter the sections to only include the ones the user is taking.
-          const userSections = sections.filter(section => courses.userCourses.includes(section.crn));
+          const userSections = sections.filter(section => dashboard.currentConfig.courses.userCourses.includes(section.crn));
           /** @type {CourseSchedules} */
           let newCourseSchedules = {};
           // Now, we build the course schedules.
@@ -457,8 +451,8 @@ const dashboard = {
             }
           }
           // Save the course schedules.
-          courses.courseSchedules = newCourseSchedules;
-          courses.saveUserCourses();
+          dashboard.currentConfig.courses.courseSchedules = newCourseSchedules;
+          dashboard.saveConfig();
         });
     },
     /**
