@@ -2,5 +2,65 @@
 <html>
     <head>
         <title>RPI Dashboard</title>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+        <script src="./js/dashboard.js"></script>
+        <link rel="stylesheet" href="./css/dashboard.css">
     </head>
+    <body>
+        <main id="dashboard">
+
+        </main>
+        <main id="settings">
+            <fieldset>
+                <legend>Settings</legend>
+                <div id="settingsGroup1" class="settingsGroup">
+                    <fieldset>
+                        <legend>Components to Show</legend>
+                        <div class="option">
+                            <input type="checkbox" name="showDate" id="showDate">
+                        <label for="showDate">Date</label>
+                        </div>
+                        <div class="option"><input type="checkbox" name="showTime" id="showTime">
+                            <label for="showTime">Time</label></div>
+                        <div class="option"><input type="checkbox" name="showWeather" id="showWeather">
+                            <label for="showWeather">Weather</label></div>
+                        <div class="option"><input type="checkbox" name="showBookmarks" id="showBookmarks">
+                            <label for="showBookmarks">Bookmarks</label></div>
+                        <div class="option"><input type="checkbox" name="showSearchBar" id="showSearchBar">
+                            <label for="showSearchBar">Search Bar</label></div>
+                        <div class="option"><input type="checkbox" name="showNextCourse" id="showNextCourse">
+                            <label for="showNextCourse">Next Course</label></div>
+                        <div class="option"><input type="checkbox" name="showWeeklySchedule" id="showWeeklySchedule">
+                            <label for="showWeeklySchedule">Weekly Schedule</label></div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Theme</legend>
+                        <div class="option"><input type="radio" name="theme" id="themeLight">
+                            <label for="themeLight">Light</label></div>
+                        <div class="option"><input type="radio" name="theme" id="themeDark">
+                            <label for="themeDark">Dark</label></div>
+                        <div class="option"><input type="radio" name="theme" id="themeSystem">
+                            <label for="themeSystem">System Theme</label></div>
+                        <div class="option"><input type="radio" name="theme" id="themeTimeOfDay">
+                            <label for="themeTimeOfDay">Time of Day</label></div>
+                        <div class="option"><input type="checkbox" name="themeUseGradient" id="themeUseGradient">
+                            <label for="themeUseGradient">Use Gradient Colors</label></div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Other</legend>
+                        <button type="button" id="importButton">Import Dashboard</button>
+                        <button type="button" id="exportButton">Export Dashboard</button>
+                    </fieldset>
+                </div>
+                <div id="settingsGroup2" class="settingsGroup">
+                    <fieldset>
+                        <legend>Bookmarks</legend>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Course Schedule</legend>
+                    </fieldset>
+                </div>
+            </fieldset>
+        </main>
+    </body>
 </html>

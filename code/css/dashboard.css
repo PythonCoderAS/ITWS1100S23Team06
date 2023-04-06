@@ -1,0 +1,26 @@
+#settings {
+    padding: 10px;
+}
+
+.settingsGroup {
+    display: flex;
+}
+
+#settingsGroup1 > fieldset {
+    flex: 33.33%;
+}
+
+#settingsGroup2 > fieldset {
+    flex: 50%;
+}
+
+.option {
+    display: block;
+}
+
+#settings button {
+    width: 100%;
+    text-align: center;
+    padding: 5px;
+    margin-bottom: 5px;
+}

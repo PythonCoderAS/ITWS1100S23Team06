@@ -1,3 +1,5 @@
+"use strict";
+
 const dashboard = {
     /**
      * Defines some enum types for the config.
@@ -26,10 +28,16 @@ const dashboard = {
      * @property {CourseSchedules} courseSchedules
      */
     /**
+     * @typedef {Object} Bookmark
+     * @property {string} text The text to show on the bookmark.
+     * @property {string} url The URL to open when the bookmark is clicked.
+     */
+    /**
      * @typedef {Object} Config
      * @property {Component[]} componentsToShow The components to show in the dashboard.
      * @property {Theme} theme The theme to use.
      * @property {Courses} courses Course data
+     * @property {Bookmark[]} bookmarks The bookmarks to show in the dashboard.
      **/
     /**
      * The default config.
@@ -89,7 +97,25 @@ const dashboard = {
          * Each key has an array of course schedules. A course schedule has a `name`, `code`, `start` and `end` time.
          */
         courseSchedules: {},
-      }
+      },
+      bookmarks: [
+        {
+            text: "Homepage",
+            url: "https://www.rpi.edu/"
+        },
+        {
+            text: "SIS",
+            url: "https://sis.rpi.edu/"
+        },
+        {
+            text: "LMS",
+            url: "https://lms.rpi.edu/"
+        },
+        {
+            text: "Submitty",
+            url: "https://submitty.cs.rpi.edu/"
+        }
+      ]
     },
     /**
      * The current config.
@@ -97,9 +123,9 @@ const dashboard = {
      **/
     currentConfig: null,
     init: function() {
-      if (currentConfig === null) {
-        currentConfig = this.loadConfig();
-        
+      if (this.currentConfig === null) {
+        this.currentConfig = this.loadConfig();
+        this.mergeWithDefaultConfig(this.currentConfig, this.defaultConfig);
       }
       this.generateDashboard();
     },
@@ -126,7 +152,7 @@ const dashboard = {
         defaultConfigRoot = this.defaultConfig;
       }
       for (const key of Object.keys(defaultConfigRoot)){
-        if (Object.keys(defaultConfigRoot[key]).length > 0 && !Array.isArray(defaultConfigRoot[key])){
+        if (typeof defaultConfigRoot[key] === "object" && Object.keys(defaultConfigRoot[key]).length > 0 && !Array.isArray(defaultConfigRoot[key]) && defaultConfigRoot[key] !== null){
           root[key] = root[key] || {};
           dashboard.mergeWithDefaultConfig(root[key], defaultConfigRoot[key]);
         } else {
@@ -345,13 +371,13 @@ const dashboard = {
       let date = DateTimeUtils.getCurrentDateTimeInNewYork();
       if (date.month < 5) {
         // If the month is before May, it is the spring semester.
-        return date.getFullYear() + "01";
+        return date.year + "01";
       } else if (date.month < 9) {
         // If the month is in May or after May but before September, it is the summer semester.
-        return date.getFullYear() + "05";
+        return date.year + "05";
       } else {
         // If the month is after September, it is the fall semester.
-        return date.getFullYear() + "09";
+        return date.year + "09";
       }
     },
     getCourseData: function(semesterNo) {
@@ -381,7 +407,7 @@ const dashboard = {
           // We only care about the courses in that department, not the department itself.
           // Extract the courses array from each department.
           for (let department of data) {
-            coursesList.push(...department.coursesList);
+            coursesList.push(...department.courses);
           }
           /**
            * @typedef {"M" | "T" | "W" | "R" | "F"} DayOfWeekQUACS
@@ -492,9 +518,13 @@ const dashboard = {
       // Get the current time.
       let currentTime = currentDateTime.hour * 100 + currentDateTime.minute;
       // Filter the courses to only include the ones that have not started yet.
-      return (this.courseSchedules[dayOfWeekStr] || []).filter(course => course.start > currentTime);
+      return (dashboard.currentConfig.courses.courseSchedules[dayOfWeekStr] || []).filter(course => course.start > currentTime);
     },
     getNextUpcomingCourse: function() {
       return this.getRemainingUserCoursesForToday()[0] || null;
     }
   }
+
+  $(document).ready(function() {
+    dashboard.init();
+  })
