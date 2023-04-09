@@ -200,6 +200,52 @@ const dashboard = {
     showSettingsPage: function() {
       $("#settings").show(0)
       $("#dashboard").hide(0)
+      this.drawBookmarksInSettings();
+    },
+    setBookmarksInSettings: function() {
+      $("#settingsBookmarkList").html(""); // Clear the bookmarks.
+      for (let num = 0; num < this.currentConfig.bookmarks.length; num++) {
+        const bookmark = this.currentConfig.bookmarks[num];
+        // Add a bookmark.
+        $("#settingsBookmarkList").append(`
+          <div class="settingsBookmark" id="bookmark-idx-${num}">
+            <a href="${bookmark.url}" target="_blank">${bookmark.text}</a>
+            <div class="actions">
+              <img src="images/icons/copy-solid.svg" class="copyBookmark">
+              <img src="images/icons/trash-can-solid.svg" class="deleteBookmark">
+            </div>
+          </div>
+        `);
+        $(".deleteBookmark").last().on("click", function() {
+          // Delete the bookmark.
+          dashboard.currentConfig.bookmarks.splice(num, 1);
+          dashboard.saveConfig();
+          dashboard.setBookmarksInSettings();
+        });
+        $(".copyBookmark").last().on("click", function() {
+          // Copy the bookmark.
+          $("#bookmarkName").val(bookmark.text);
+          $("#bookmarkURL").val(bookmark.url);
+        });
+      }
+    },
+    drawBookmarksInSettings: function () {
+      this.setBookmarksInSettings();
+      $("#addBookmarkButton").on("click", function() {
+        // Add a bookmark.
+        if ($("#bookmarkName").val() === "" || $("#bookmarkURL").val() === "") {
+          alert("Please fill out both the bookmark name and bookmark URL.");
+          return;
+        }
+        dashboard.currentConfig.bookmarks.push({
+          text: $("#bookmarkName").val(),
+          url: $("#bookmarkURL").val()
+        });
+        dashboard.saveConfig();
+        dashboard.setBookmarksInSettings();
+        $("#bookmarkName").val("");
+        $("#bookmarkURL").val("");
+      });
     },
     showDashboard: function() {
       $("#dashboard").show(0)

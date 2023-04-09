@@ -53,8 +53,23 @@
                     </fieldset>
                 </div>
                 <div id="settingsGroup2" class="settingsGroup">
-                    <fieldset>
+                    <fieldset id="bookmarkSettings">
                         <legend>Bookmarks</legend>
+                        <div id="settingsBookmarkList">
+
+                        </div>
+                        <div id="addBookmarkForm">
+                            <form>
+                                <fieldset>
+                                    <legend>Add Bookmark</legend>
+                                    <div>
+                                        <input type="text" name="bookmarkName" id="bookmarkName" placeholder="Bookmark Name">
+                                <input type="text" name="bookmarkURL" id="bookmarkURL" placeholder="Bookmark URL">
+                                    </div>
+                                <button type="button" id="addBookmarkButton">Add Bookmark</button>
+                                </fieldset>
+                            </form>
+                        </div>
                     </fieldset>
                     <fieldset>
                         <legend>Course Schedule</legend>

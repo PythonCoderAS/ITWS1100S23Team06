@@ -24,3 +24,39 @@
     padding: 5px;
     margin-bottom: 5px;
 }
+
+.copyBookmark, .deleteBookmark {
+    display: block;
+    width: 25px;
+    height: 25px;
+}
+
+.settingsBookmark {
+    display: flex;
+    margin-bottom: 7px;
+}
+
+.settingsBookmark > * {
+    flex: 50%;
+}
+
+.settingsBookmark .actions {
+    display: flex;
+    justify-content: right;
+}
+
+#bookmarkSettings .actions img {
+    display: inline;
+    text-align: right;
+    margin-right: 10px;
+}
+
+#addBookmarkForm div {
+    display: flex;
+    column-gap: 2.5%;
+    margin-bottom: 5px;
+}
+
+#addBookmarkForm div input {
+    flex: 45%;
+}
