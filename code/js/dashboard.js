@@ -122,11 +122,11 @@ const dashboard = {
    **/
   currentConfig: null,
   init: function() {
-    if (this.currentConfig === null) {
-      this.currentConfig = this.loadConfig();
-      this.mergeWithDefaultConfig(this.currentConfig, this.defaultConfig);
+    if (dashboard.currentConfig === null) {
+      dashboard.currentConfig = dashboard.loadConfig();
+      dashboard.mergeWithDefaultConfig(dashboard.currentConfig, this.defaultConfig);
     }
-    this.generateDashboard();
+    dashboard.generateDashboard();
   },
   loadConfig: function() {
     // Load the config from the local storage.
@@ -135,7 +135,7 @@ const dashboard = {
     let config;
     if (configStr === null) {
       // If the config is not found, use the default config.
-      config = this.defaultConfig;
+      config = dashboard.defaultConfig;
     } else {
       // If the config is found, parse it as JSON.
       config = JSON.parse(configStr);
@@ -145,10 +145,10 @@ const dashboard = {
   mergeWithDefaultConfig: function(root, defaultConfigRoot) {
     // Merges the stored config with the default config.
     if (root === undefined) {
-      root = this.currentConfig;
+      root = dashboard.currentConfig;
     }
     if (defaultConfigRoot === undefined) {
-      defaultConfigRoot = this.defaultConfig;
+      defaultConfigRoot = dashboard.defaultConfig;
     }
     for (const key of Object.keys(defaultConfigRoot)) {
       if (typeof defaultConfigRoot[key] === "object" && Object.keys(defaultConfigRoot[key]).length > 0 && !Array.isArray(defaultConfigRoot[key]) && defaultConfigRoot[key] !== null) {
@@ -163,26 +163,26 @@ const dashboard = {
   },
   saveConfig: function() {
     // Save the config to the local storage as JSON.
-    localStorage.setItem("dashboardConfig", JSON.stringify(this.currentConfig));
+    localStorage.setItem("dashboardConfig", JSON.stringify(dashboard.currentConfig));
   },
   lastDownloadURL: null,
   generateConfigDownloadLink: function() {
-    if (this.lastDownloadURL !== null) {
+    if (dashboard.lastDownloadURL !== null) {
       // Revoke the old download URL.
-      URL.revokeObjectURL(this.lastDownloadURL);
+      URL.revokeObjectURL(dashboard.lastDownloadURL);
     }
     // Create a new download URL.
-    this.lastDownloadURL = URL.createObjectURL(new Blob([JSON.stringify(this.currentConfig)], {
+    dashboard.lastDownloadURL = URL.createObjectURL(new Blob([JSON.stringify(dashboard.currentConfig)], {
       type: "application/json"
     }));
-    $("#exportButton").attr("href", this.lastDownloadURL);
+    $("#exportButton").attr("href", dashboard.lastDownloadURL);
     $("#exportButton").attr("download", "dashboardConfig.json");
-    return this.lastDownloadURL;
+    return dashboard.lastDownloadURL;
   },
   setupImport: function() {
     $("#importButton").on("change", function() {
       // When the file is selected, read it.
-      let file = this.files[0];
+      let file = dashboard.files[0];
       let reader = new FileReader();
       reader.onload = function() {
         // When the file is read, parse it as JSON.
@@ -199,13 +199,21 @@ const dashboard = {
   showSettingsPage: function() {
     $("#settings").show(0)
     $("#dashboard").hide(0)
-    this.drawBookmarksInSettings();
-    this.drawCoursesInSettings();
+    dashboard.drawBookmarksInSettings();
+    dashboard.drawCoursesInSettings();
+    dashboard.drawComponentsToShowSettings();
+    $("#componentsToShowSettings").on("click", function() {
+      dashboard.processComponentsToShowClick();
+    });
+    dashboard.drawThemeSettings();
+    $("#themeSettings").on("click", function() {
+      dashboard.processThemeSettingsClick();
+    });
   },
   setBookmarksInSettings: function() {
     $("#settingsBookmarkList").html(""); // Clear the bookmarks.
-    for (let num = 0; num < this.currentConfig.bookmarks.length; num++) {
-      const bookmark = this.currentConfig.bookmarks[num];
+    for (let num = 0; num < dashboard.currentConfig.bookmarks.length; num++) {
+      const bookmark = dashboard.currentConfig.bookmarks[num];
       // Add a bookmark.
       $("#settingsBookmarkList").append(`
           <div class="settingsBookmark" id="bookmark-idx-${num}">
@@ -230,7 +238,7 @@ const dashboard = {
     }
   },
   drawBookmarksInSettings: function() {
-    this.setBookmarksInSettings();
+    dashboard.setBookmarksInSettings();
     $("#addBookmarkButton").on("click", function() {
       // Add a bookmark.
       if ($("#bookmarkName").val() === "" || $("#bookmarkURL").val() === "") {
@@ -249,8 +257,8 @@ const dashboard = {
   },
   setCoursesInSettings: function() {
     $("#settingsCourseList").html(""); // Clear the courses.
-    for (let num = 0; num < this.currentConfig.courses.userCourses.length; num++) {
-      const course = this.currentConfig.courses.userCourses[num];
+    for (let num = 0; num < dashboard.currentConfig.courses.userCourses.length; num++) {
+      const course = dashboard.currentConfig.courses.userCourses[num];
       // Add a course.
       $("#settingsCourseList").append(`
           <div class="settingsCourse" id="course-idx-${num}">
@@ -269,7 +277,7 @@ const dashboard = {
     }
   },
   drawCoursesInSettings: function() {
-    this.setCoursesInSettings();
+    dashboard.setCoursesInSettings();
     $("#addCourseButton").on("click", function() {
       // Add a course.
       if ($("#courseCRN").val() === "") {
@@ -281,6 +289,82 @@ const dashboard = {
       dashboard.setCoursesInSettings();
       $("#courseCRN").val("");
     });
+  },
+  drawComponentsToShowSettings: function() {
+    // Draw the components to show.
+    $("#showDate").prop("checked", dashboard.currentConfig.componentsToShow.includes("date"));
+    $("#showTime").prop("checked", dashboard.currentConfig.componentsToShow.includes("time"));
+    $("#showWeather").prop("checked", dashboard.currentConfig.componentsToShow.includes("weather"));
+    $("#showBookmarks").prop("checked", dashboard.currentConfig.componentsToShow.includes("bookmarks"));
+    $("#showSearchBar").prop("checked", dashboard.currentConfig.componentsToShow.includes("searchBar"));
+    $("#showNextCourse").prop("checked", dashboard.currentConfig.componentsToShow.includes("nextCourse"));
+    $("#showWeeklySchedule").prop("checked", dashboard.currentConfig.componentsToShow.includes("weeklySchedule"));
+  },
+  processComponentsToShowClick: function() {
+    // Process the components to show.
+    dashboard.currentConfig.componentsToShow = [];
+    if ($("#showDate").prop("checked")) {
+      dashboard.currentConfig.componentsToShow.push("date");
+    }
+    if ($("#showTime").prop("checked")) {
+      dashboard.currentConfig.componentsToShow.push("time");
+    }
+    if ($("#showWeather").prop("checked")) {
+      dashboard.currentConfig.componentsToShow.push("weather");
+    }
+    if ($("#showBookmarks").prop("checked")) {
+      dashboard.currentConfig.componentsToShow.push("bookmarks");
+    }
+    if ($("#showSearchBar").prop("checked")) {
+      dashboard.currentConfig.componentsToShow.push("searchBar");
+    }
+    if ($("#showNextCourse").prop("checked")) {
+      dashboard.currentConfig.componentsToShow.push("nextCourse");
+    }
+    if ($("#showWeeklySchedule").prop("checked")) {
+      dashboard.currentConfig.componentsToShow.push("weeklySchedule");
+    }
+    dashboard.saveConfig();
+    dashboard.drawComponentsToShowSettings();
+  },
+  drawThemeSettings: function() {
+    // Draw the theme settings.
+    $('input[name="theme"]').prop("checked", false);
+    switch(dashboard.currentConfig.theme.mode) {
+      case "light":
+        $("#themeLight").prop("checked", true);
+        break;
+      case "dark":
+        $("#themeDark").prop("checked", true);
+        break;
+      case "system":
+        $("#themeSystem").prop("checked", true);
+        break;
+      case "timeOfDay":
+        $("#themeTimeOfDay").prop("checked", true);
+        break;
+    }
+    $("#themeUseGradient").prop("checked", dashboard.currentConfig.theme.useGradientColors);
+  },
+  processThemeSettingsClick: function() {
+    // Process the theme settings.
+    switch($('input[name="theme"]:checked').prop("id")) {
+      case "themeLight":
+        dashboard.currentConfig.theme.mode = "light";
+        break;
+      case "themeDark":
+        dashboard.currentConfig.theme.mode = "dark";
+        break;
+      case "themeSystem":
+        dashboard.currentConfig.theme.mode = "system";
+        break;
+      case "themeTimeOfDay":
+        dashboard.currentConfig.theme.mode = "timeOfDay";
+        break;
+    }
+    dashboard.currentConfig.theme.useGradientColors = $("#themeUseGradient").prop("checked");
+    dashboard.saveConfig();
+    dashboard.drawThemeSettings();
   },
   showDashboard: function() {
     $("#dashboard").show(0)
