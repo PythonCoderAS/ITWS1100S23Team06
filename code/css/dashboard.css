@@ -19,6 +19,9 @@
     padding: 5px;
     margin-bottom: 5px;
 }
+#importButtonFileInput {
+    display: none;
+}
 .copyBookmark, .deleteBookmark, .deleteCourse {
     display: block;
     width: 25px;

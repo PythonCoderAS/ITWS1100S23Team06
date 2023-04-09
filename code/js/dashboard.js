@@ -121,6 +121,7 @@ const dashboard = {
    * @type {Config | null}
    **/
   currentConfig: null,
+  setSettingsInitialClickHandlers: false,
   init: function() {
     if (dashboard.currentConfig === null) {
       dashboard.currentConfig = dashboard.loadConfig();
@@ -175,14 +176,21 @@ const dashboard = {
     dashboard.lastDownloadURL = URL.createObjectURL(new Blob([JSON.stringify(dashboard.currentConfig)], {
       type: "application/json"
     }));
-    $("#exportButton").attr("href", dashboard.lastDownloadURL);
-    $("#exportButton").attr("download", "dashboardConfig.json");
+    $("#exportButton").off();
+    $("#exportButton").on("click", function() {
+      $(document.body).append(`<a style="display: none;" id="downloadLink" href="${dashboard.lastDownloadURL}" download="dashboardConfig.json"></a>`);
+      $("#downloadLink")[0].click();
+      $("#downloadLink").remove();
+    });
     return dashboard.lastDownloadURL;
   },
   setupImport: function() {
-    $("#importButton").on("change", function() {
+    $("#importButtonFileInput").on("change", function() {
       // When the file is selected, read it.
-      let file = dashboard.files[0];
+      let file = this.files[0];
+      if (!file) {
+        return;
+      }
       let reader = new FileReader();
       reader.onload = function() {
         // When the file is read, parse it as JSON.
@@ -191,10 +199,16 @@ const dashboard = {
         dashboard.currentConfig = config;
         dashboard.saveConfig();
         // Reload the page.
-        location.reload();
+        dashboard.showSettingsPage();
       };
       reader.readAsText(file);
     });
+    if (!dashboard.setSettingsInitialClickHandlers) {
+      $("#importButton").on("click", function() {
+        // When the import button is clicked, trigger the file input.
+        $("#importButtonFileInput").trigger("click");
+      });
+    }
   },
   showSettingsPage: function() {
     $("#settings").show(0)
@@ -202,13 +216,18 @@ const dashboard = {
     dashboard.drawBookmarksInSettings();
     dashboard.drawCoursesInSettings();
     dashboard.drawComponentsToShowSettings();
-    $("#componentsToShowSettings").on("click", function() {
-      dashboard.processComponentsToShowClick();
-    });
     dashboard.drawThemeSettings();
-    $("#themeSettings").on("click", function() {
-      dashboard.processThemeSettingsClick();
-    });
+    if (!dashboard.setSettingsInitialClickHandlers){
+      $("#componentsToShowSettings").on("click", function() {
+        dashboard.processComponentsToShowClick();
+      });
+      $("#themeSettings").on("click", function() {
+        dashboard.processThemeSettingsClick();
+      });
+    }
+    dashboard.generateConfigDownloadLink();
+    dashboard.setupImport();
+    dashboard.setSettingsInitialClickHandlers = true;
   },
   setBookmarksInSettings: function() {
     $("#settingsBookmarkList").html(""); // Clear the bookmarks.
@@ -239,21 +258,23 @@ const dashboard = {
   },
   drawBookmarksInSettings: function() {
     dashboard.setBookmarksInSettings();
-    $("#addBookmarkButton").on("click", function() {
-      // Add a bookmark.
-      if ($("#bookmarkName").val() === "" || $("#bookmarkURL").val() === "") {
-        alert("Please fill out both the bookmark name and bookmark URL.");
-        return;
-      }
-      dashboard.currentConfig.bookmarks.push({
-        text: $("#bookmarkName").val(),
-        url: $("#bookmarkURL").val()
+    if (!dashboard.setSettingsInitialClickHandlers){
+      $("#addBookmarkButton").on("click", function() {
+        // Add a bookmark.
+        if ($("#bookmarkName").val() === "" || $("#bookmarkURL").val() === "") {
+          alert("Please fill out both the bookmark name and bookmark URL.");
+          return;
+        }
+        dashboard.currentConfig.bookmarks.push({
+          text: $("#bookmarkName").val(),
+          url: $("#bookmarkURL").val()
+        });
+        dashboard.saveConfig();
+        dashboard.setBookmarksInSettings();
+        $("#bookmarkName").val("");
+        $("#bookmarkURL").val("");
       });
-      dashboard.saveConfig();
-      dashboard.setBookmarksInSettings();
-      $("#bookmarkName").val("");
-      $("#bookmarkURL").val("");
-    });
+    }
   },
   setCoursesInSettings: function() {
     $("#settingsCourseList").html(""); // Clear the courses.
@@ -278,17 +299,19 @@ const dashboard = {
   },
   drawCoursesInSettings: function() {
     dashboard.setCoursesInSettings();
-    $("#addCourseButton").on("click", function() {
-      // Add a course.
-      if ($("#courseCRN").val() === "") {
-        alert("Please fill out the course CRN.");
-        return;
-      }
-      dashboard.currentConfig.courses.userCourses.push(Number($("#courseCRN").val()));
-      courses.determineCourseSchedule();
-      dashboard.setCoursesInSettings();
-      $("#courseCRN").val("");
-    });
+    if (!dashboard.setSettingsInitialClickHandlers){
+      $("#addCourseButton").on("click", function() {
+        // Add a course.
+        if ($("#courseCRN").val() === "") {
+          alert("Please fill out the course CRN.");
+          return;
+        }
+        dashboard.currentConfig.courses.userCourses.push(Number($("#courseCRN").val()));
+        courses.determineCourseSchedule();
+        dashboard.setCoursesInSettings();
+        $("#courseCRN").val("");
+      });
+    }
   },
   drawComponentsToShowSettings: function() {
     // Draw the components to show.
