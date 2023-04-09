@@ -1,71 +1,57 @@
 #settings {
     padding: 10px;
 }
-
 .settingsGroup {
     display: flex;
 }
-
 #settingsGroup1 > fieldset {
     flex: 33.33%;
 }
-
 #settingsGroup2 > fieldset {
     flex: 50%;
 }
-
 .option {
     display: block;
 }
-
 #settings button {
     width: 100%;
     text-align: center;
     padding: 5px;
     margin-bottom: 5px;
 }
-
 .copyBookmark, .deleteBookmark, .deleteCourse {
     display: block;
     width: 25px;
     height: 25px;
 }
-
 .settingsBookmark, .settingsCourse {
     display: flex;
     margin-bottom: 7px;
 }
-
 .settingsBookmark > *, .settingsCourse > * {
     flex: 50%;
 }
-
 .settingsBookmark .actions, .settingsCourse .actions {
     display: flex;
     justify-content: right;
 }
-
 #bookmarkSettings .actions img, #courseSettings .actions img {
     display: inline;
     text-align: right;
     margin-right: 10px;
 }
-
 #addBookmarkForm div {
     display: flex;
     column-gap: 2.5%;
     margin-bottom: 5px;
 }
-
 #addCourseForm div {
     display: block;
     margin-bottom: 5px;
 }
-
 #addCourseForm div input {
     width: 97.5%;
 }
-
 #addBookmarkForm div input {
     flex: 45%;
 }

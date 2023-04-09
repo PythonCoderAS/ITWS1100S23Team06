@@ -7,9 +7,7 @@
         <link rel="stylesheet" href="./css/dashboard.css">
     </head>
     <body>
-        <main id="dashboard">
-
-        </main>
+        <main id="dashboard"></main>
         <main id="settings">
             <fieldset>
                 <legend>Settings</legend>
@@ -18,33 +16,55 @@
                         <legend>Components to Show</legend>
                         <div class="option">
                             <input type="checkbox" name="showDate" id="showDate">
-                        <label for="showDate">Date</label>
+                            <label for="showDate">Date</label>
                         </div>
-                        <div class="option"><input type="checkbox" name="showTime" id="showTime">
-                            <label for="showTime">Time</label></div>
-                        <div class="option"><input type="checkbox" name="showWeather" id="showWeather">
-                            <label for="showWeather">Weather</label></div>
-                        <div class="option"><input type="checkbox" name="showBookmarks" id="showBookmarks">
-                            <label for="showBookmarks">Bookmarks</label></div>
-                        <div class="option"><input type="checkbox" name="showSearchBar" id="showSearchBar">
-                            <label for="showSearchBar">Search Bar</label></div>
-                        <div class="option"><input type="checkbox" name="showNextCourse" id="showNextCourse">
-                            <label for="showNextCourse">Next Course</label></div>
-                        <div class="option"><input type="checkbox" name="showWeeklySchedule" id="showWeeklySchedule">
-                            <label for="showWeeklySchedule">Weekly Schedule</label></div>
+                        <div class="option">
+                            <input type="checkbox" name="showTime" id="showTime">
+                            <label for="showTime">Time</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="showWeather" id="showWeather">
+                            <label for="showWeather">Weather</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="showBookmarks" id="showBookmarks">
+                            <label for="showBookmarks">Bookmarks</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="showSearchBar" id="showSearchBar">
+                            <label for="showSearchBar">Search Bar</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="showNextCourse" id="showNextCourse">
+                            <label for="showNextCourse">Next Course</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="showWeeklySchedule" id="showWeeklySchedule">
+                            <label for="showWeeklySchedule">Weekly Schedule</label>
+                        </div>
                     </fieldset>
                     <fieldset>
                         <legend>Theme</legend>
-                        <div class="option"><input type="radio" name="theme" id="themeLight">
-                            <label for="themeLight">Light</label></div>
-                        <div class="option"><input type="radio" name="theme" id="themeDark">
-                            <label for="themeDark">Dark</label></div>
-                        <div class="option"><input type="radio" name="theme" id="themeSystem">
-                            <label for="themeSystem">System Theme</label></div>
-                        <div class="option"><input type="radio" name="theme" id="themeTimeOfDay">
-                            <label for="themeTimeOfDay">Time of Day</label></div>
-                        <div class="option"><input type="checkbox" name="themeUseGradient" id="themeUseGradient">
-                            <label for="themeUseGradient">Use Gradient Colors</label></div>
+                        <div class="option">
+                            <input type="radio" name="theme" id="themeLight">
+                            <label for="themeLight">Light</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="theme" id="themeDark">
+                            <label for="themeDark">Dark</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="theme" id="themeSystem">
+                            <label for="themeSystem">System Theme</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="theme" id="themeTimeOfDay">
+                            <label for="themeTimeOfDay">Time of Day</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="themeUseGradient" id="themeUseGradient">
+                            <label for="themeUseGradient">Use Gradient Colors</label>
+                        </div>
                     </fieldset>
                     <fieldset>
                         <legend>Other</legend>
@@ -55,9 +75,7 @@
                 <div id="settingsGroup2" class="settingsGroup">
                     <fieldset id="bookmarkSettings">
                         <legend>Bookmarks</legend>
-                        <div id="settingsBookmarkList">
-
-                        </div>
+                        <div id="settingsBookmarkList"></div>
                         <div id="addBookmarkForm">
                             <form>
                                 <fieldset>
@@ -66,16 +84,14 @@
                                         <input type="text" name="bookmarkName" id="bookmarkName" placeholder="Bookmark Name">
                                         <input type="text" name="bookmarkURL" id="bookmarkURL" placeholder="Bookmark URL">
                                     </div>
-                                <button type="button" id="addBookmarkButton">Add Bookmark</button>
+                                    <button type="button" id="addBookmarkButton">Add Bookmark</button>
                                 </fieldset>
                             </form>
                         </div>
                     </fieldset>
                     <fieldset>
                         <legend>Course Schedule</legend>
-                        <div id="settingsCourseList">
-
-                        </div>
+                        <div id="settingsCourseList"></div>
                         <div id="addCourseForm">
                             <form>
                                 <fieldset>
@@ -83,7 +99,7 @@
                                     <div>
                                         <input type="text" name="courseCRN" id="courseCRN" placeholder="Course CRN">
                                     </div>
-                                <button type="button" id="addCourseButton">Add Course</button>
+                                    <button type="button" id="addCourseButton">Add Course</button>
                                 </fieldset>
                             </form>
                         </div>
