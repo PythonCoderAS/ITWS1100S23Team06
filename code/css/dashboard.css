@@ -25,27 +25,27 @@
     margin-bottom: 5px;
 }
 
-.copyBookmark, .deleteBookmark {
+.copyBookmark, .deleteBookmark, .deleteCourse {
     display: block;
     width: 25px;
     height: 25px;
 }
 
-.settingsBookmark {
+.settingsBookmark, .settingsCourse {
     display: flex;
     margin-bottom: 7px;
 }
 
-.settingsBookmark > * {
+.settingsBookmark > *, .settingsCourse > * {
     flex: 50%;
 }
 
-.settingsBookmark .actions {
+.settingsBookmark .actions, .settingsCourse .actions {
     display: flex;
     justify-content: right;
 }
 
-#bookmarkSettings .actions img {
+#bookmarkSettings .actions img, #courseSettings .actions img {
     display: inline;
     text-align: right;
     margin-right: 10px;
@@ -55,6 +55,15 @@
     display: flex;
     column-gap: 2.5%;
     margin-bottom: 5px;
+}
+
+#addCourseForm div {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#addCourseForm div input {
+    width: 97.5%;
 }
 
 #addBookmarkForm div input {

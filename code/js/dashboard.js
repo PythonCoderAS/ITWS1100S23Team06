@@ -201,6 +201,7 @@ const dashboard = {
       $("#settings").show(0)
       $("#dashboard").hide(0)
       this.drawBookmarksInSettings();
+      this.drawCoursesInSettings();
     },
     setBookmarksInSettings: function() {
       $("#settingsBookmarkList").html(""); // Clear the bookmarks.
@@ -245,6 +246,41 @@ const dashboard = {
         dashboard.setBookmarksInSettings();
         $("#bookmarkName").val("");
         $("#bookmarkURL").val("");
+      });
+    },
+    setCoursesInSettings: function() {
+      $("#settingsCourseList").html(""); // Clear the courses.
+      for (let num = 0; num < this.currentConfig.courses.userCourses.length; num++) {
+        const course = this.currentConfig.courses.userCourses[num];
+        // Add a course.
+        $("#settingsCourseList").append(`
+          <div class="settingsCourse" id="course-idx-${num}">
+            <span>CRN ${course}</span>
+            <div class="actions">
+              <img src="images/icons/trash-can-solid.svg" class="deleteCourse">
+            </div>
+          </div>
+        `);
+        $(".deleteCourse").last().on("click", function() {
+          // Delete the course.
+          dashboard.currentConfig.courses.userCourses.splice(num, 1);
+          courses.determineCourseSchedule();
+          dashboard.setCoursesInSettings();
+        });
+      }
+    },
+    drawCoursesInSettings: function () {
+      this.setCoursesInSettings();
+      $("#addCourseButton").on("click", function() {
+        // Add a course.
+        if ($("#courseCRN").val() === "") {
+          alert("Please fill out the course CRN.");
+          return;
+        }
+        dashboard.currentConfig.courses.userCourses.push(Number($("#courseCRN").val()));
+        courses.determineCourseSchedule();
+        dashboard.setCoursesInSettings();
+        $("#courseCRN").val("");
       });
     },
     showDashboard: function() {
