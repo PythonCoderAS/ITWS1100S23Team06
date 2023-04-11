@@ -58,3 +58,108 @@
 #addBookmarkForm div input {
     flex: 45%;
 }
+h1 {
+    text-align:left;
+    position: static;
+    
+}
+
+/* CSS for 5 day schedule, will hold a ul in each table header*/
+.schedule {
+    border-collapse: collapse;
+    width: 50%;
+    height: 50%;
+}
+.schedule table {
+    position: absolute;
+    margin: 0;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+    border: 1px solid black;
+}
+
+.schedule th {
+    border: 1px solid black;
+    width: 20%;
+}
+.schedule ul {
+    font-size: 1em;
+}
+/* End of schedule css =======================================*/
+
+/* Sections for settings button */
+.settings {
+    position: absolute;
+    margin: 0;
+    right: 2%;
+}
+.settingsButton {
+
+}
+/* End of settings Button ======*/
+/* Copy-pasting inline styles from index.html */
+body{
+    background-color: beige;
+}
+.time {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    font-size: 70px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.date{
+    position: absolute;
+    top: 76px;
+    left: 34px;
+    font-size: 31px;
+}
+.dashTitle {
+    position: absolute;
+    top: 43%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 60px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-align: center;
+    
+}
+.searchBar {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-align: center;
+}
+
+form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    justify-content: space-between;
+    width: auto;
+    display: flex;
+    
+}
+input[type=text]{
+    width: 60%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+}
+button {
+    background-color: blue;
+    color: white;
+    padding: 1px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}

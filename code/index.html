@@ -3,144 +3,58 @@
     
     <head>
 
-        <script type="text/javascript" src="js/dashboard.js"></script>
-        <link rel="stylesheet" href="dashboard.css">
         <title>RPI Dashboard</title>
-<<<<<<< HEAD
-
-            <style>
-                body{
-                    background-color: beige;
-                }
-                .time {
-                    position: absolute;
-                    top: 10px;
-                    left: 20px;
-                    font-size: 70px;
-                    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-                }
-                .date{
-                    position: absolute;
-                    top: 76px;
-                    left: 34px;
-                    font-size: 31px;
-                }
-                .dashTitle {
-                    position: absolute;
-                    top: 43%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    font-size: 60px;
-                    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-                    text-align: center;
-                    
-                }
-                .searchBar {
-                    position: absolute;
-                    top: 48%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    font-size: 30px;
-                    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-                    text-align: center;
-                }
-
-                form {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    justify-content: space-between;
-                    width: auto;
-                    display: flex;
-                    
-                }
-                input[type=text]{
-                    width: 60%;
-                    padding: 10px;
-                    border: 1px solid #ccc;
-                    border-radius: 10px;
-                    box-sizing: border-box;
-                    margin-top: 6px;
-                    margin-bottom: 16px;
-                    resize: vertical;
-                }
-                button {
-                    background-color: blue;
-                    color: white;
-                    padding: 1px;
-                    border: none;
-                    border-radius: 3px;
-                    cursor: pointer;
-                }
-            </style>
-            
-    </head>
-
-    <body>
-        <div class="time">HH:MM:SS</div>
-        <div class="date">Monday, April 14, 2023</div>
-        <div class="dashTitle">RPI Dashboard</div>
-        <!-- <div class="searchBar">Search Bar</div> -->
-
-        <form>
-        <label for="google"></label>
-		<input type="text" id="username" name="username" placeholder="Search the Web">
-        <button type="submit">Search</button>
-        </form>
-    
-        <div class="settings">
-            <button type="settingsButton">Settings Image</button>
-        </div>
-        <div class="schedule">
-            <table>
-                <th>
-                    <ul>
-                        <li>Monday</li>
-                    </ul>
-                </th>
-                <th>
-                    <ul>
-                        <li>Tuesday</li>
-                    </ul>
-                </th>
-                <th>
-                    <ul>
-                        <li>Wednesday</li>
-                    </ul>
-                </th>
-                <th>
-                    <ul>
-                        <li>Thrusday</li>
-                    </ul>
-                </th>
-                <th>
-                    <ul>
-                        <li>Friday</li>
-                    </ul>
-                </th>
-            </table>
-        </div>
-
-        
-    </body>
-
-
-
-
-
-
-
-
-
-
-=======
         <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
         <script src="./js/dashboard.js"></script>
         <link rel="stylesheet" href="./css/dashboard.css">
     </head>
     <body>
-        <main id="dashboard"></main>
+        <main id="dashboard">
+            <div class="time">HH:MM:SS</div>
+            <div class="date">Monday, April 14, 2023</div>
+            <div class="dashTitle">RPI Dashboard</div>
+            <!-- <div class="searchBar">Search Bar</div> -->
+    
+            <form>
+            <label for="google"></label>
+            <input type="text" id="username" name="username" placeholder="Search the Web">
+            <button type="submit">Search</button>
+            </form>
+        
+            <div class="settings">
+                <button type="settingsButton">Settings Image</button>
+            </div>
+            <div class="schedule">
+                <table>
+                    <th>
+                        <ul>
+                            <li>Monday</li>
+                        </ul>
+                    </th>
+                    <th>
+                        <ul>
+                            <li>Tuesday</li>
+                        </ul>
+                    </th>
+                    <th>
+                        <ul>
+                            <li>Wednesday</li>
+                        </ul>
+                    </th>
+                    <th>
+                        <ul>
+                            <li>Thrusday</li>
+                        </ul>
+                    </th>
+                    <th>
+                        <ul>
+                            <li>Friday</li>
+                        </ul>
+                    </th>
+                </table>
+            </div>
+    
+        </main>
         <main id="settings">
             <fieldset>
                 <legend>Settings</legend>
@@ -242,5 +156,4 @@
             </fieldset>
         </main>
     </body>
->>>>>>> 2557d675b3584c5935da4cd7219c2c3d27b98203
 </html>
