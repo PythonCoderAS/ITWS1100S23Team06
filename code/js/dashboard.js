@@ -408,7 +408,10 @@ const dashboard = {
       dashboard.setDashboardInitialClickHandlers = true;
     }
     if (dashboard.currentConfig.componentsToShow.includes("date") || dashboard.currentConfig.componentsToShow.includes("time")) {
-      this.dashboardIntervals.push(setInterval(dashboard.updateDateAndTime, 100));
+      dashboard.dashboardIntervals.push(setInterval(dashboard.updateDateAndTime, 500));
+    }
+    if (dashboard.currentConfig.componentsToShow.includes("nextCourse") || dashboard.currentConfig.componentsToShow.includes("weeklySchedule")) {
+      dashboard.dashboardIntervals.push(setInterval(dashboard.updateCourseSchedule, 1000));
     }
     if (!dashboard.currentConfig.componentsToShow.includes("date")) {
       $("#date").hide(0);
@@ -420,6 +423,31 @@ const dashboard = {
     } else {
       $("#time").show(0);
     }
+    if (!dashboard.currentConfig.componentsToShow.includes("weather")) {
+      $("#weather").hide(0);
+    } else {
+      $("#weather").show(0);
+    }
+    if (!dashboard.currentConfig.componentsToShow.includes("bookmarks")) {
+      $("#bookmarks").hide(0);
+    } else {
+      $("#bookmarks").show(0);
+    }
+    if (!dashboard.currentConfig.componentsToShow.includes("searchBar")) {
+      $("#searchBar").hide(0);
+    } else {
+      $("#searchBar").show(0);
+    }
+    if (!dashboard.currentConfig.componentsToShow.includes("nextCourse")) {
+      $("#nextCourse").hide(0);
+    } else {
+      $("#nextCourse").show(0);
+    }
+    if (!dashboard.currentConfig.componentsToShow.includes("weeklySchedule")) {
+      $("#weeklySchedule").hide(0);
+    } else {
+      $("#weeklySchedule").show(0);
+    }
     dashboard.updateDateAndTime();
   },
   updateDateAndTime: function() {
@@ -429,6 +457,34 @@ const dashboard = {
     const calendarDate = `${date.weekdayName}, ${date.monthName} ${date.day}, ${date.year}`;
     $('#date').text(calendarDate);
     $('#time').text(time);
+  },
+  updateCourseSchedule: function() {
+    if (dashboard.currentConfig.courses.userCourses.length === 0){
+      return;
+    }
+    const todayCourse = courses.getUserCoursesForToday();
+    const nextCourse = courses.getNextUpcomingCourse();
+    let text = "";
+    if (todayCourse.length === 0) {
+      text = "No courses for today, enjoy your day!";
+    }
+    if (todayCourse.length > 0 && nextCourse === null) {
+      text = "No more courses for today, enjoy the rest of your day!";
+    } 
+    if (todayCourse.length > 0 && nextCourse !== null) {
+      const currentDateTime = DateTimeUtils.getCurrentDateTimeInNewYork();
+      const deltaFromNextCourse = nextCourse.start - (currentDateTime.hour * 100 + currentDateTime.minute);
+      const deltaHours = Math.floor(deltaFromNextCourse / 100);
+      const deltaMinutes = deltaFromNextCourse % 100;
+      text = `${nextCourse.courseName} starts in`;
+      if (deltaHours > 0) {
+        text += ` ${deltaHours} hr`;
+      }
+      if (deltaMinutes > 0) {
+        text += ` ${deltaMinutes} min`;
+      }
+    }
+    $("#nextCourse").text(text);
   },
   updateWeather: function() {
     // Get the weather.
@@ -713,9 +769,9 @@ const courses = {
    * @returns {CourseSchedule[]}
    */
   getUserCourses: function(day) {
-    return this.courseSchedules[day] || [];
+    return dashboard.currentConfig.courses.courseSchedules[day] || [];
   },
-  getRemainingUserCoursesForToday: function() {
+  getUserCoursesForToday: function() {
     // Get the current day of the week.
     const currentDateTime = DateTimeUtils.getCurrentDateTimeInNewYork();
     let dayOfWeek = currentDateTime.weekdayNum;
@@ -741,13 +797,20 @@ const courses = {
       default:
         return [];
     }
-    // Get the current time.
-    let currentTime = currentDateTime.hour * 100 + currentDateTime.minute;
-    // Filter the courses to only include the ones that have not started yet.
-    return (dashboard.currentConfig.courses.courseSchedules[dayOfWeekStr] || []).filter(course => course.start > currentTime);
+    return (dashboard.currentConfig.courses.courseSchedules[dayOfWeekStr] || []).sort((a, b) => a.start - b.start);;
   },
   getNextUpcomingCourse: function() {
-    return this.getRemainingUserCoursesForToday()[0] || null;
+    const todayCourses = courses.getUserCoursesForToday();
+    const currentDateTime = DateTimeUtils.getCurrentDateTimeInNewYork();
+    /** @type {SingleCourseSchedule | null} */
+    let nextCourse = null;
+    for (let course of todayCourses) {
+      if (course.start > (currentDateTime.hour * 100 + currentDateTime.minute)) {
+        nextCourse = course;
+        break;
+      }
+    }
+    return nextCourse;
   }
 }
 
