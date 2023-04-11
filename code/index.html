@@ -10,47 +10,34 @@
     </head>
     <body>
         <main id="dashboard">
-            <div class="time">HH:MM:SS</div>
-            <div class="date">Monday, April 14, 2023</div>
+            <div class="time" id="time">HH:MM:SS</div>
+            <div class="date" id="date">Monday, April 14, 2023</div>
             <div class="dashTitle">RPI Dashboard</div>
+            <div class="dashSubTitle" id="nextCourse"></div>
             <!-- <div class="searchBar">Search Bar</div> -->
     
-            <form>
-            <label for="google"></label>
-            <input type="text" id="username" name="username" placeholder="Search the Web">
-            <button type="submit">Search</button>
+            <form id="searchBarForm" action="https://www.google.com/search" method="get">
+            <input type="text" id="queryInput" name="q" placeholder="Search the Web">
+            <button type="submit" id="searchButton">Search<span>&#9656;</span></button>
             </form>
         
-            <div class="settings">
-                <button type="settingsButton">Settings Image</button>
+            <div class="settings clickable">
+                <img src="images/icons/gear-solid.svg" id="settingsGear">
             </div>
-            <div class="schedule">
+            <div class="schedule" id="schedule">
                 <table>
-                    <th>
-                        <ul>
-                            <li>Monday</li>
-                        </ul>
-                    </th>
-                    <th>
-                        <ul>
-                            <li>Tuesday</li>
-                        </ul>
-                    </th>
-                    <th>
-                        <ul>
-                            <li>Wednesday</li>
-                        </ul>
-                    </th>
-                    <th>
-                        <ul>
-                            <li>Thrusday</li>
-                        </ul>
-                    </th>
-                    <th>
-                        <ul>
-                            <li>Friday</li>
-                        </ul>
-                    </th>
+                   <thead>
+                          <tr>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                          </tr>
+                   </thead>
+                   <tbody id="weeklySchedule">
+
+                   </tbody>
                 </table>
             </div>
     
@@ -58,6 +45,7 @@
         <main id="settings">
             <fieldset>
                 <legend>Settings</legend>
+                <p>All settings changed are automatically saved.</p>
                 <div id="settingsGroup1" class="settingsGroup">
                     <fieldset id="componentsToShowSettings">
                         <legend>Components to Show</legend>
@@ -153,6 +141,7 @@
                         </div>
                     </fieldset>
                 </div>
+                <button type="button" id="closeSettingsButton">Close</button>
             </fieldset>
         </main>
     </body>

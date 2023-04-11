@@ -121,13 +121,16 @@ const dashboard = {
    * @type {Config | null}
    **/
   currentConfig: null,
+  setDashboardInitialClickHandlers: false,
   setSettingsInitialClickHandlers: false,
+  /** @type {number[]} */
+  dashboardIntervals: [],
   init: function() {
     if (dashboard.currentConfig === null) {
       dashboard.currentConfig = dashboard.loadConfig();
       dashboard.mergeWithDefaultConfig(dashboard.currentConfig, this.defaultConfig);
     }
-    dashboard.generateDashboard();
+    dashboard.showDashboard();
   },
   loadConfig: function() {
     // Load the config from the local storage.
@@ -224,10 +227,16 @@ const dashboard = {
       $("#themeSettings").on("click", function() {
         dashboard.processThemeSettingsClick();
       });
+      $("#closeSettingsButton").on("click", function() {
+        dashboard.showDashboard();
+      });
+      dashboard.setSettingsInitialClickHandlers = true;
     }
     dashboard.generateConfigDownloadLink();
     dashboard.setupImport();
-    dashboard.setSettingsInitialClickHandlers = true;
+    dashboard.dashboardIntervals.forEach(function(interval) {
+      clearInterval(interval);
+    });
   },
   setBookmarksInSettings: function() {
     $("#settingsBookmarkList").html(""); // Clear the bookmarks.
@@ -238,8 +247,8 @@ const dashboard = {
           <div class="settingsBookmark" id="bookmark-idx-${num}">
             <a href="${bookmark.url}" target="_blank">${bookmark.text}</a>
             <div class="actions">
-              <img src="images/icons/copy-solid.svg" class="copyBookmark">
-              <img src="images/icons/trash-can-solid.svg" class="deleteBookmark">
+              <img src="images/icons/copy-solid.svg" class="copyBookmark clickable">
+              <img src="images/icons/trash-can-solid.svg" class="deleteBookmark clickable">
             </div>
           </div>
         `);
@@ -285,7 +294,7 @@ const dashboard = {
           <div class="settingsCourse" id="course-idx-${num}">
             <span>CRN ${course}</span>
             <div class="actions">
-              <img src="images/icons/trash-can-solid.svg" class="deleteCourse">
+              <img src="images/icons/trash-can-solid.svg" class="deleteCourse clickable">
             </div>
           </div>
         `);
@@ -392,6 +401,34 @@ const dashboard = {
   showDashboard: function() {
     $("#dashboard").show(0)
     $("#settings").hide(0)
+    if (!dashboard.setDashboardInitialClickHandlers){
+      $("#settingsGear").on("click", function() {
+        dashboard.showSettingsPage();
+      });
+      dashboard.setDashboardInitialClickHandlers = true;
+    }
+    if (dashboard.currentConfig.componentsToShow.includes("date") || dashboard.currentConfig.componentsToShow.includes("time")) {
+      this.dashboardIntervals.push(setInterval(dashboard.updateDateAndTime, 100));
+    }
+    if (!dashboard.currentConfig.componentsToShow.includes("date")) {
+      $("#date").hide(0);
+    } else {
+      $("#date").show(0);
+    }
+    if (!dashboard.currentConfig.componentsToShow.includes("time")) {
+      $("#time").hide(0);
+    } else {
+      $("#time").show(0);
+    }
+    dashboard.updateDateAndTime();
+  },
+  updateDateAndTime: function() {
+    // Display the current time in HH:MM:SS and the current date in Weekday, Month Day, Year.
+    const date = DateTimeUtils.getCurrentDateTimeInNewYork();
+    const time = `${String(date.hour12).padStart(2, '0')}:${String(date.minute).padStart(2, '0')}:${String(date.second).padStart(2, '0')}`;
+    const calendarDate = `${date.weekdayName}, ${date.monthName} ${date.day}, ${date.year}`;
+    $('#date').text(calendarDate);
+    $('#time').text(time);
   },
   updateWeather: function() {
     // Get the weather.

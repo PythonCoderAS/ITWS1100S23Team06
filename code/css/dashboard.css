@@ -58,6 +58,9 @@
 #addBookmarkForm div input {
     flex: 45%;
 }
+#closeSettingsButton {
+    margin-top: 10px;
+}
 h1 {
     text-align:left;
     position: static;
@@ -80,11 +83,16 @@ h1 {
 }
 
 .schedule th {
-    border: 1px solid black;
     width: 20%;
 }
-.schedule ul {
+.schedule th:not(:last-child){
+    border-right: 1px solid black;
+}
+.schedule thead {
     font-size: 1em;
+}
+.schedule thead th {
+    padding: 5px;
 }
 /* End of schedule css =======================================*/
 
@@ -92,10 +100,7 @@ h1 {
 .settings {
     position: absolute;
     margin: 0;
-    right: 2%;
-}
-.settingsButton {
-
+    right: 0.5%;
 }
 /* End of settings Button ======*/
 /* Copy-pasting inline styles from index.html */
@@ -123,7 +128,15 @@ body{
     font-size: 60px;
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     text-align: center;
-    
+}
+.dashSubTitle {
+    position: absolute;
+    top: 43%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-align: center;
 }
 .searchBar {
     position: absolute;
@@ -135,17 +148,16 @@ body{
     text-align: center;
 }
 
-form {
+#dashboard form {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     justify-content: space-between;
     width: auto;
-    display: flex;
     
 }
-input[type=text]{
+#dashboard input[type=text]{
     width: 60%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -158,8 +170,21 @@ input[type=text]{
 button {
     background-color: blue;
     color: white;
-    padding: 1px;
+    padding: 2px;
     border: none;
     border-radius: 3px;
     cursor: pointer;
+}
+#searchButton {
+    padding: 10px;
+}
+#searchButton span {
+    margin-left: 5px;
+}
+.clickable {
+    cursor: pointer;
+}
+#settingsGear {
+    width: 50px;
+    height: 50px;
 }
