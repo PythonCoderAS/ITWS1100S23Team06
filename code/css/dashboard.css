@@ -77,7 +77,7 @@ button {
 #dashboard {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: repeat(2, 33vh);
+    grid-template-rows: 35vh 20vh;
     gap: 15px;
 }
 #dashboard #datetime {
