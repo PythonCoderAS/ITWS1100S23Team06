@@ -316,7 +316,18 @@ const dashboard = {
           alert("Please fill out the course CRN.");
           return;
         }
-        dashboard.currentConfig.courses.userCourses.push(Number($("#courseCRN").val()));
+        const newCRN = Number($("#courseCRN").val());
+        if (!Number.isInteger(newCRN)) {
+          alert("Please enter a valid CRN.");
+          return;
+        }
+        if (!dashboard.currentConfig.courses.userCourses.includes(newCRN)) {
+          dashboard.currentConfig.courses.userCourses.push(newCRN);
+        } else {
+          alert("You already have that course added.");
+          $("#courseCRN").val("");
+          return;
+        }
         courses.determineCourseSchedule();
         dashboard.setCoursesInSettings();
         $("#courseCRN").val("");
