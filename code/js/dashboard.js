@@ -176,7 +176,7 @@ const dashboard = {
       URL.revokeObjectURL(dashboard.lastDownloadURL);
     }
     // Create a new download URL.
-    dashboard.lastDownloadURL = URL.createObjectURL(new Blob([JSON.stringify(dashboard.currentConfig)], {
+    dashboard.lastDownloadURL = URL.createObjectURL(new Blob([JSON.stringify(dashboard.currentConfig, undefined, 4)], {
       type: "application/json"
     }));
     $("#exportButton").off();
@@ -737,7 +737,7 @@ const courses = {
         dataType: "json",
         success: function(data) {
           // Save the course data to the session storage.
-          sessionStorage.setItem(`courseData-${semesterNo}`, JSON.stringify(data, undefined, 4));
+          sessionStorage.setItem(`courseData-${semesterNo}`, JSON.stringify(data));
           resolve(data);
         },
         error: reject
