@@ -79,6 +79,7 @@ button {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 20vh 15vh 20vh;
     gap: 15px;
+    overflow-wrap: break-word;
 }
 #dashboard #datetimeweather {
     grid-column: 1;

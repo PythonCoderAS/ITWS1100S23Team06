@@ -220,6 +220,13 @@ const dashboard = {
     dashboard.drawCoursesInSettings();
     dashboard.drawComponentsToShowSettings();
     dashboard.drawThemeSettings();
+    dashboard.generateConfigDownloadLink();
+    dashboard.setupImport();
+    dashboard.dashboardIntervals.forEach(function(interval) {
+      clearInterval(interval);
+    });
+    dashboard.dashboardIntervals = [];
+    // NOTE - This block has to come last.
     if (!dashboard.setSettingsInitialClickHandlers){
       $("#componentsToShowSettings").on("click", function() {
         dashboard.processComponentsToShowClick();
@@ -232,12 +239,6 @@ const dashboard = {
       });
       dashboard.setSettingsInitialClickHandlers = true;
     }
-    dashboard.generateConfigDownloadLink();
-    dashboard.setupImport();
-    dashboard.dashboardIntervals.forEach(function(interval) {
-      clearInterval(interval);
-    });
-    dashboard.dashboardIntervals = [];
   },
   setBookmarksInSettings: function() {
     $("#settingsBookmarkList").html(""); // Clear the bookmarks.
