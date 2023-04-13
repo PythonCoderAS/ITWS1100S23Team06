@@ -237,6 +237,7 @@ const dashboard = {
     dashboard.dashboardIntervals.forEach(function(interval) {
       clearInterval(interval);
     });
+    dashboard.dashboardIntervals = [];
   },
   setBookmarksInSettings: function() {
     $("#settingsBookmarkList").html(""); // Clear the bookmarks.
@@ -409,9 +410,11 @@ const dashboard = {
     }
     if (dashboard.currentConfig.componentsToShow.includes("date") || dashboard.currentConfig.componentsToShow.includes("time")) {
       dashboard.dashboardIntervals.push(setInterval(dashboard.updateDateAndTime, 500));
+      dashboard.updateDateAndTime();
     }
     if (dashboard.currentConfig.componentsToShow.includes("nextCourse") || dashboard.currentConfig.componentsToShow.includes("weeklySchedule")) {
-      dashboard.dashboardIntervals.push(setInterval(dashboard.updateCourseSchedule, 1000));
+      dashboard.dashboardIntervals.push(setInterval(dashboard.updateCourseSchedule, 10000));
+      dashboard.updateCourseSchedule();
     }
     if (!dashboard.currentConfig.componentsToShow.includes("date")) {
       $("#date").hide(0);
@@ -485,6 +488,30 @@ const dashboard = {
       }
     }
     $("#nextCourse").text(text);
+    const mondayCourses = courses.getUserCourses("mon");
+    const tuesdayCourses = courses.getUserCourses("tue");
+    const wednesdayCourses = courses.getUserCourses("wed");
+    const thursdayCourses = courses.getUserCourses("thu");
+    const fridayCourses = courses.getUserCourses("fri");
+    const maxCourseCount = Math.max(mondayCourses.length, tuesdayCourses.length, wednesdayCourses.length, thursdayCourses.length, fridayCourses.length);
+    const cols = [mondayCourses, tuesdayCourses, wednesdayCourses, thursdayCourses, fridayCourses];
+    $("#weeklySchedule").empty();
+    let tableBodyHTML = "";
+    for (let i = 0; i < maxCourseCount; i++) {
+      let rowHTML = "<tr>";
+      for (let j = 0; j < 5; j++) {
+        let colHTML = "<td>";
+        if (cols[j][i] !== undefined) {
+          const course = cols[j][i];
+          colHTML += course.name;
+        }
+        colHTML += "</td>";
+        rowHTML += colHTML;
+      }
+      rowHTML += "</tr>";
+      tableBodyHTML += rowHTML;
+    }
+    $("#weeklySchedule").html(tableBodyHTML);
   },
   updateWeather: function() {
     // Get the weather.
@@ -766,7 +793,7 @@ const courses = {
   /**
    * Get the user's courses for a specific day.
    * @param {DayOfWeek} day 
-   * @returns {CourseSchedule[]}
+   * @returns {SingleCourseSchedule[]}
    */
   getUserCourses: function(day) {
     return dashboard.currentConfig.courses.courseSchedules[day] || [];
