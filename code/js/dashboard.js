@@ -737,7 +737,7 @@ const courses = {
         dataType: "json",
         success: function(data) {
           // Save the course data to the session storage.
-          sessionStorage.setItem(`courseData-${semesterNo}`, JSON.stringify(data));
+          sessionStorage.setItem(`courseData-${semesterNo}`, JSON.stringify(data, undefined, 4));
           resolve(data);
         },
         error: reject
