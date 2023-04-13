@@ -10,14 +10,20 @@
     </head>
     <body>
         <main id="dashboard">
-            <div class="datetime" id="datetime">
-                <div class="time" id="time">HH:MM:SS</div>
-                <div class="date" id="date">Monday, April 14, 2023</div>
+            <div class="datetimeweather" id="datetimeweather">
+                <div id="datetime">
+                    <div class="time" id="time">HH:MM:SS</div>
+                    <div class="date" id="date">Monday, April 14, 2023</div>
+                </div>
+                <div id="weather">
+                    <img id="weatherSymbol" src="https://openweathermap.org/img/wn/01d.png">
+                    <div id="weatherTemp"><span id="weatherTempNum">69</span>&#8457;</div>
+                </div>
             </div>
             <div id="center-data">
                 <div class="dashTitle">RPI Dashboard</div>
                 <div class="dashSubTitle" id="nextCourse"></div>
-                <form id="searchBarForm" action="https://www.google.com/search" method="get">
+                <form id="searchBar" action="https://www.google.com/search" method="get">
                     <input type="text" id="queryInput" name="q" placeholder="Search the Web">
                     <button type="submit" id="searchButton">Search<span>&#9656;</span></button>
                 </form>
@@ -28,6 +34,7 @@
             </div>
             <div class="schedule" id="schedule">
                 <table>
+                    <caption>Weekly Class Schedule</caption>
                    <thead>
                           <tr>
                             <th>Monday</th>
@@ -41,6 +48,15 @@
 
                    </tbody>
                 </table>
+            </div>
+            <div id="bookmarks" class="bookmarks">
+                <div id="bookmarksHeading">Bookmarks</div>
+                <div id="bookmarksBody">
+                    <ul>
+                        <li><a href="https://www.google.com">Google</a></li>
+                        <li><a href="https://www.rpi.edu">RPI</a></li>
+                    </ul>
+                </div>
             </div>
     
         </main>

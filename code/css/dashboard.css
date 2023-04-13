@@ -76,16 +76,22 @@ button {
 }
 #dashboard {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 35vh 20vh;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 20vh 15vh 20vh;
     gap: 15px;
 }
-#dashboard #datetime {
+#dashboard #datetimeweather {
     grid-column: 1;
     grid-row: 1;
+    display: flex;
+    gap: 15px;
+}
+#weatherContainer {
+    display: flex;
+    flex-direction: column;
 }
 #dashboard #settingsGearDiv {
-    grid-column: 2;
+    grid-column: 3;
     grid-row: 1;
     text-align: right;
 }
@@ -95,7 +101,7 @@ button {
 }
 #center-data {
     grid-column: 1 / -1;
-    grid-row: 2;
+    grid-row: 3;
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
@@ -121,7 +127,6 @@ button {
     border: 1px solid black;
     border-collapse: collapse;
 }
-
 .schedule th {
     width: 20%;
 }
@@ -139,6 +144,39 @@ button {
     border: 1px solid black;
     padding: 5px;
     text-align: center;
+}
+.nextCourse {
+    background-color: #d6001c;
+    color: white;
+}
+#bookmarks {
+    grid-column: 3;
+    grid-row: 2 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-self: end;
+}
+#bookmarksHeading {
+    text-align: center;
+}
+#bookmarksBody {
+    border: 1px solid black;
+    width: 10vw;
+}
+
+#bookmarksBody ul {
+    margin: 0;
+    padding: 0;
+}
+
+#bookmarksBody li {
+    list-style: none;
+    padding: 5px;
+    text-align: center;
+}
+#bookmarksBody li:not(:last-child){
+    border-bottom: 1px solid black;
 }
 /* End of schedule css =======================================*/
 

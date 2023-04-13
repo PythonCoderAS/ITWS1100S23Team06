@@ -427,6 +427,10 @@ const dashboard = {
       dashboard.dashboardIntervals.push(setInterval(dashboard.updateCourseSchedule, 10000));
       dashboard.updateCourseSchedule();
     }
+    if (dashboard.currentConfig.componentsToShow.includes("weather")) {
+      dashboard.dashboardIntervals.push(setInterval(dashboard.updateWeather, 600000));
+      dashboard.updateWeather();
+    }
     if (!dashboard.currentConfig.componentsToShow.includes("date")) {
       $("#date").hide(0);
     } else {
@@ -446,6 +450,7 @@ const dashboard = {
       $("#bookmarks").hide(0);
     } else {
       $("#bookmarks").show(0);
+      dashboard.updateBookmarks();
     }
     if (!dashboard.currentConfig.componentsToShow.includes("searchBar")) {
       $("#searchBar").hide(0);
@@ -467,7 +472,7 @@ const dashboard = {
   updateDateAndTime: function() {
     // Display the current time in HH:MM:SS and the current date in Weekday, Month Day, Year.
     const date = DateTimeUtils.getCurrentDateTimeInNewYork();
-    const time = `${String(date.hour12).padStart(2, '0')}:${String(date.minute).padStart(2, '0')}:${String(date.second).padStart(2, '0')}`;
+    const time = `${String(date.hour).padStart(2, '0')}:${String(date.minute).padStart(2, '0')}:${String(date.second).padStart(2, '0')}`;
     const calendarDate = `${date.weekdayName}, ${date.monthName} ${date.day}, ${date.year}`;
     $('#date').text(calendarDate);
     $('#time').text(time);
@@ -489,7 +494,7 @@ const dashboard = {
       const currentDateTime = DateTimeUtils.getCurrentDateTimeInNewYork();
       const deltaFromNextCourse = nextCourse.start - (currentDateTime.hour * 100 + currentDateTime.minute);
       const deltaHours = Math.floor(deltaFromNextCourse / 100);
-      const deltaMinutes = deltaFromNextCourse % 100;
+      const deltaMinutes = (deltaFromNextCourse % 100) - 40; // 100 - 0 = 100, but the difference between an hour is 60 minutes. Subtract 40 to calibrate.
       text = `${nextCourse.name} starts in`;
       if (deltaHours > 0) {
         text += ` ${deltaHours} hr`;
@@ -514,7 +519,15 @@ const dashboard = {
         let colHTML = "<td>";
         if (cols[j][i] !== undefined) {
           const course = cols[j][i];
-          colHTML += course.name;
+          if (course === nextCourse) {
+            colHTML = '<td class="nextCourse">';
+          }
+          colHTML += `<span class="courseName">${course.name}</span><br>`;
+          const courseStartHr = Math.floor(course.start / 100);
+          const courseStartMin = course.start % 100;
+          const courseEndHr = Math.floor(course.end / 100);
+          const courseEndMin = course.end % 100;
+          colHTML += `<span class="courseTime">${String(courseStartHr).padStart(2, '0')}:${String(courseStartMin).padStart(2, '0')} - ${String(courseEndHr).padStart(2, '0')}:${String(courseEndMin).padStart(2, '0')}</span>`;
         }
         colHTML += "</td>";
         rowHTML += colHTML;
@@ -531,13 +544,25 @@ const dashboard = {
         // Update the weather.
         // Todo: Implement this.
         // This can be rain, clear, clouds, etc.
-        const typeOfWeather = data.weather[0].main;
+        const weatherIcon = data.weather[0].icon;
+        const curTemp = data.main.temp;
+        $("#weatherSymbol").prop("src", `https://openweathermap.org/img/wn/${weatherIcon}.png`);
+        console.log(curTemp);
+        $("#weatherTempNum").text(Math.round(curTemp));
       }
     ).catch(
       function(error) {
         alert("Error getting weather: " + error)
       }
     )
+  },
+  updateBookmarks: function() {
+    $("#bookmarks ul").empty();
+    for (let i = 0; i < dashboard.currentConfig.bookmarks.length; i++) {
+      const bookmark = dashboard.currentConfig.bookmarks[i];
+      const bookmarkHTML = `<li><a class="bookmark" href="${bookmark.url}">${bookmark.text}</a></li>`;
+      $("#bookmarks ul").append(bookmarkHTML);
+    }
   }
 }
 
