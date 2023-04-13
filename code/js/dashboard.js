@@ -479,7 +479,7 @@ const dashboard = {
       const deltaFromNextCourse = nextCourse.start - (currentDateTime.hour * 100 + currentDateTime.minute);
       const deltaHours = Math.floor(deltaFromNextCourse / 100);
       const deltaMinutes = deltaFromNextCourse % 100;
-      text = `${nextCourse.courseName} starts in`;
+      text = `${nextCourse.name} starts in`;
       if (deltaHours > 0) {
         text += ` ${deltaHours} hr`;
       }
