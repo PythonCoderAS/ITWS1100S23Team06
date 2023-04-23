@@ -607,6 +607,7 @@ const dashboard = {
     const calendarDate = `${date.weekdayName}, ${date.monthName} ${date.day}, ${date.year}`;
     $('#date').text(calendarDate);
     $('#time').text(time);
+    dashboard.setTheme();
   },
   updateCourseSchedule: function() {
     if (dashboard.currentConfig.courses.userCourses.length === 0){
@@ -736,6 +737,9 @@ const DateTimeUtils = {
    * @returns {DateTime}
    */
   getCurrentDateTimeInNewYork: function() {
+    if (this.constantDateTime !== null) {
+      return this.constantDateTime;
+    }
     const formattedString = Intl.DateTimeFormat("en-US", {
       timeZone: "America/New_York",
       year: "numeric",
@@ -828,7 +832,9 @@ const DateTimeUtils = {
       hour12: hour % 12,
       isPm: hour >= 12
     }
-  }
+  },
+  /** @type {DateTime | null} */
+  constantDateTime: null
 }
 
 const courses = {
