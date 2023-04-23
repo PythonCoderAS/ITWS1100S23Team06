@@ -83,6 +83,27 @@ body.dark fieldset, body.sunset fieldset, body.night fieldset {
 body.dark button, body.sunset button, body.night button {
     color: black;
 }
+body.dark {
+    background-color: #111;
+}
+body.sunset {
+    background-color: /* #ff5100 */ rgba(255, 81, 0, 0.7);
+}
+body.night {
+    background-color: #444;
+}
+body.light, body.sunrise, body.day {
+    color: black;
+}
+body.light {
+    background-color: white;
+}
+body.sunrise {
+    background-color: /* #ffcc00 */ rgba(255, 250, 160, 0.8);
+}
+body.day {
+    background-color: /* #00ccff */ rgba(0, 204, 255, 0.5);
+}
 #dashboard {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -157,6 +178,7 @@ body.dark button, body.sunset button, body.night button {
     border: 1px solid black;
     border-collapse: collapse;
 }
+
 .schedule th {
     width: 20%;
 }
