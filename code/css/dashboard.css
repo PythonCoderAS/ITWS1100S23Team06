@@ -74,6 +74,15 @@ button {
     border-radius: 3px;
     cursor: pointer;
 }
+body.dark, body.sunset, body.night {
+    color: white;
+}
+body.dark fieldset, body.sunset fieldset, body.night fieldset {
+    border-color: white;
+}
+body.dark button, body.sunset button, body.night button {
+    color: black;
+}
 #dashboard {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -86,6 +95,26 @@ button {
     grid-row: 1;
     display: flex;
     gap: 15px;
+}
+#weatherSymbol{
+    width: 70px;
+}
+#weatherTemp{
+    font-size: 20px;
+    
+}
+#date{
+    font-size: 30px;
+}
+#time{
+    font-size: 80px;
+}
+.dashTitle{
+    font-size: 4em;
+    
+}
+.nextCourse{
+    font-size: 100px;
 }
 #weatherContainer {
     display: flex;
@@ -153,9 +182,6 @@ button {
 #bookmarks {
     grid-column: 3;
     grid-row: 2 / -1;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
     justify-self: end;
 }
 #bookmarksHeading {
@@ -179,6 +205,7 @@ button {
 #bookmarksBody li:not(:last-child){
     border-bottom: 1px solid black;
 }
+
 /* End of schedule css =======================================*/
 
 /* Sections for settings button */
