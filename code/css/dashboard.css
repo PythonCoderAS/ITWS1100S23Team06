@@ -80,11 +80,17 @@ body.dark, body.sunset, body.night {
 body.dark fieldset, body.sunset fieldset, body.night fieldset {
     border-color: white;
 }
-body.dark button, body.sunset button, body.night button {
-    color: black;
+body.dark a, body.dark a:visited, body.sunset a, body.sunset a:visited, body.night a, body.night a:visited {
+    color: rgb(0, 128, 255);
 }
 body.dark {
     background-color: #111;
+}
+body.dark .schedule table, body.dark .schedule table th, body.dark .schedule table td, body.dark .schedule table tbody tr, body.dark #bookmarksBody {
+    border: 1px solid white;
+}
+body.dark #bookmarksBody li:not(:last-child) {
+    border-bottom: 1px solid white;
 }
 body.sunset {
     background-color: /* #ff5100 */ rgba(255, 81, 0, 0.7);
@@ -94,6 +100,9 @@ body.night {
 }
 body.light, body.sunrise, body.day {
     color: black;
+}
+body.light a, body.light a:visited, body.sunrise a, body.sunrise a:visited, body.day a, body.day a:visited {
+    color: rgba(0, 0, 255, 0.8);
 }
 body.light {
     background-color: white;
@@ -149,6 +158,9 @@ body.day {
 #settingsGear {
     width: 50px;
     height: 50px;
+}
+body.dark img.icon, body.sunset img.icon, body.night img.icon {
+    filter: invert(100%);
 }
 #center-data {
     grid-column: 1 / -1;

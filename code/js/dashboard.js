@@ -315,8 +315,8 @@ const dashboard = {
           <div class="settingsBookmark" id="bookmark-idx-${num}">
             <a href="${bookmark.url}" target="_blank">${bookmark.text}</a>
             <div class="actions">
-              <img src="images/icons/copy-solid.svg" class="copyBookmark clickable">
-              <img src="images/icons/trash-can-solid.svg" class="deleteBookmark clickable">
+              <img src="images/icons/copy-solid.svg" class="copyBookmark clickable icon">
+              <img src="images/icons/trash-can-solid.svg" class="deleteBookmark clickable icon">
             </div>
           </div>
         `);
@@ -365,7 +365,7 @@ const dashboard = {
           <div class="settingsCourse" id="course-idx-${num}">
             <span>CRN ${course}</span>
             <div class="actions">
-              <img src="images/icons/trash-can-solid.svg" class="deleteCourse clickable">
+              <img src="images/icons/trash-can-solid.svg" class="deleteCourse clickable icon">
             </div>
           </div>
         `);
