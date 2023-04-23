@@ -156,6 +156,7 @@ const dashboard = {
         dashboard.mergeWithDefaultConfig(dashboard.currentConfig, this.defaultConfig);
       }
     }
+    dashboard.setTheme();
     dashboard.showDashboard();
   },
   /**
@@ -477,6 +478,7 @@ const dashboard = {
     }
     dashboard.currentConfig.theme.useGradientColors = $("#themeUseGradient").prop("checked");
     dashboard.saveConfig();
+    dashboard.setTheme();
     dashboard.drawThemeSettings();
   },
   showDashboard: function() {
@@ -538,6 +540,66 @@ const dashboard = {
     }
     dashboard.updateDateAndTime();
   },
+  /**
+   * Sets the theme to use.
+   */
+  setTheme: function() {
+    let effectiveTheme = dashboard.currentConfig.theme.mode;
+    if (effectiveTheme === "system") {
+      // matchesMedia will return if a media query matches.
+      // The query to get if the user has dark mode enabled is '(prefers-color-scheme: dark)'.
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        effectiveTheme = "dark";
+      } else {
+        effectiveTheme = "light";
+      }
+    }
+    if (effectiveTheme === "light"){
+      $("body").removeClass();
+      $("body").addClass("light");
+    }
+    if (effectiveTheme === "dark"){
+      $("body").removeClass();
+      $("body").addClass("dark");
+    }
+    if (effectiveTheme === "timeOfDay"){
+      const date = DateTimeUtils.getCurrentDateTimeInNewYork();
+      if (dashboard.currentConfig.theme.useGradientColors) {
+        // We have four distinct time of day themes.
+        // Sunrise: 6:00 AM - 8:00 AM
+        // Day: 8:00 AM - 6:00 PM
+        // Sunset: 6:00 PM - 8:00 PM
+        // Night: 8:00 PM - 6:00 AM
+        if (date.hour >= 6 && date.hour < 8) {
+          $("body").removeClass();
+          $("body").addClass("sunrise");
+        }
+        if (date.hour >= 8 && date.hour < 18) {
+          $("body").removeClass();
+          $("body").addClass("day");
+        }
+        if (date.hour >= 18 && date.hour < 20) {
+          $("body").removeClass();
+          $("body").addClass("sunset");
+        }
+        if (date.hour >= 20 || date.hour < 6) {
+          $("body").removeClass();
+          $("body").addClass("night");
+        }
+      } else {
+        // We have two distinct time of day themes.
+        // Day: 6:00 AM - 6:00 PM
+        // Night: 6:00 PM - 6:00 AM
+        if (date.hour >= 6 && date.hour < 18) {
+          $("body").removeClass();
+          $("body").addClass("light");
+        } else {
+          $("body").removeClass();
+          $("body").addClass("dark");
+        }
+      }
+    }
+  },
   updateDateAndTime: function() {
     // Display the current time in HH:MM:SS and the current date in Weekday, Month Day, Year.
     const date = DateTimeUtils.getCurrentDateTimeInNewYork();
@@ -545,6 +607,7 @@ const dashboard = {
     const calendarDate = `${date.weekdayName}, ${date.monthName} ${date.day}, ${date.year}`;
     $('#date').text(calendarDate);
     $('#time').text(time);
+    dashboard.setTheme();
   },
   updateCourseSchedule: function() {
     if (dashboard.currentConfig.courses.userCourses.length === 0){
@@ -674,6 +737,9 @@ const DateTimeUtils = {
    * @returns {DateTime}
    */
   getCurrentDateTimeInNewYork: function() {
+    if (this.constantDateTime !== null) {
+      return this.constantDateTime;
+    }
     const formattedString = Intl.DateTimeFormat("en-US", {
       timeZone: "America/New_York",
       year: "numeric",
@@ -766,7 +832,9 @@ const DateTimeUtils = {
       hour12: hour % 12,
       isPm: hour >= 12
     }
-  }
+  },
+  /** @type {DateTime | null} */
+  constantDateTime: null
 }
 
 const courses = {
