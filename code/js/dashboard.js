@@ -98,7 +98,12 @@ const dashboard = {
        */
       courseSchedules: {},
     },
-    bookmarks: [{
+    /**
+     * This is the list of bookmarks.
+     * Each bookmark has a `text` and a `url`.
+     */
+    bookmarks: [
+      {
         text: "Homepage",
         url: "https://www.rpi.edu/"
       },
@@ -121,17 +126,42 @@ const dashboard = {
    * @type {Config | null}
    **/
   currentConfig: null,
+  /**
+   * This is used to make usre that click handlers for the dashboard are only set once, and not duplicated.
+   * This makes it safe to call `showDashboard()` multiple times.
+   */
   setDashboardInitialClickHandlers: false,
+  /**
+   * This is used to make usre that click handlers for the settings are only set once, and not duplicated.
+   * This makes it safe to call `showSettings()` multiple times.
+   * @type {boolean}
   setSettingsInitialClickHandlers: false,
-  /** @type {number[]} */
+  /** 
+   * This is used to store the interval functions for the dashboard.
+   * Things that need to dynamically update, such as the current time, or the course list, are updated using intervals.
+   * When we swap to the settings, we do not want these intervals to continue running, so we clear them using `clearInterval`.
+   * A call to `setInterval` returns an "interval id", which is given to `clearInterval` to stop the interval.
+   * @type {number[]}
+  */
   dashboardIntervals: [],
+  /**
+   * This function initializes the dashboard on the initial page load.
+   * It will load the settings, merge them with the default config is necessary, and show the dashboard.
+   */
   init: function() {
     if (dashboard.currentConfig === null) {
       dashboard.currentConfig = dashboard.loadConfig();
-      dashboard.mergeWithDefaultConfig(dashboard.currentConfig, this.defaultConfig);
+      if (dashboard.currentConfig !== dashboard.defaultConfig){
+        // Only merge if the current config and the default config are not the same.
+        dashboard.mergeWithDefaultConfig(dashboard.currentConfig, this.defaultConfig);
+      }
     }
     dashboard.showDashboard();
   },
+  /**
+   * Loads the config from local storage. If there is no config (first time load), it will return the default config.
+   * @returns {Config} The config.
+   */
   loadConfig: function() {
     // Load the config from the local storage.
     let configStr = localStorage.getItem("dashboardConfig");
@@ -146,6 +176,15 @@ const dashboard = {
     }
     return config;
   },
+  /**
+   * This merges the stored config with the default config.
+   * The merge algorithim is similar to copying nodes of a binary tree from one root to another root.
+   * For every key in the main config, if the key is an object, it will recursively merge the object.
+   * Otherwise, if the key is not an object, and the key is present in the default config but not in the main config, it will copy the value from the default config to the main config.
+   * Arrays are not treated as objects.
+   * @param {Object} root 
+   * @param {Object | undefined} defaultConfigRoot 
+   */
   mergeWithDefaultConfig: function(root, defaultConfigRoot) {
     // Merges the stored config with the default config.
     if (root === undefined) {
@@ -165,11 +204,22 @@ const dashboard = {
       }
     }
   },
+  /**
+   * This function saves the current config to local storage. The config is stringified into its JSON representation.
+   */
   saveConfig: function() {
-    // Save the config to the local storage as JSON.
     localStorage.setItem("dashboardConfig", JSON.stringify(dashboard.currentConfig));
   },
+  /**
+   * This stores the last download URL. This is needed since if the dashboard's config is changed, a new download URL must be generated.
+   * The old one must be revoked to prevent memory leaks.
+   * @type {string | null}
+   */
   lastDownloadURL: null,
+  /**
+   * Generates a URL that, when visited, will return the config in a `.json` file.
+   * @returns {string} The download URL.
+   */
   generateConfigDownloadLink: function() {
     if (dashboard.lastDownloadURL !== null) {
       // Revoke the old download URL.
@@ -181,13 +231,19 @@ const dashboard = {
     }));
     $("#exportButton").off();
     $("#exportButton").on("click", function() {
+      // We need to use this hack because the only way to download a file is to click a link.
       $(document.body).append(`<a style="display: none;" id="downloadLink" href="${dashboard.lastDownloadURL}" download="dashboardConfig.json"></a>`);
       $("#downloadLink")[0].click();
       $("#downloadLink").remove();
     });
     return dashboard.lastDownloadURL;
   },
+  /**
+   * Sets up the import button.
+   * We need to do it this way because the only way to select files is to use a file input.
+   */
   setupImport: function() {
+    // Called when a file is added or removed from the file input.
     $("#importButtonFileInput").on("change", function() {
       // When the file is selected, read it.
       let file = this.files[0];
@@ -213,6 +269,12 @@ const dashboard = {
       });
     }
   },
+  /**
+   * Shows the settings page.
+   * This function hides the dashboard, and updates the placeholder values of the settings page to reflect the config.
+   * It also sets up the click handlers for the settings page.
+   * It will also clear the dashboard intervals.
+   */
   showSettingsPage: function() {
     $("#settings").show(0)
     $("#dashboard").hide(0)
@@ -240,6 +302,9 @@ const dashboard = {
       dashboard.setSettingsInitialClickHandlers = true;
     }
   },
+  /**
+   * Creates the bookmarks list in the settings and assigns click handlers for the "delete bookmark" and "copy bookmark" buttons.
+   */
   setBookmarksInSettings: function() {
     $("#settingsBookmarkList").html(""); // Clear the bookmarks.
     for (let num = 0; num < dashboard.currentConfig.bookmarks.length; num++) {
@@ -267,6 +332,9 @@ const dashboard = {
       });
     }
   },
+  /**
+   * Make the bookmarks list in the settings and also adds the click handler for the "add bookmark" section.
+   */
   drawBookmarksInSettings: function() {
     dashboard.setBookmarksInSettings();
     if (!dashboard.setSettingsInitialClickHandlers){
