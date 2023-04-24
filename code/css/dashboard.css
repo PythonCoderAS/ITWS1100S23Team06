@@ -86,10 +86,10 @@ body.dark a, body.dark a:visited, body.sunset a, body.sunset a:visited, body.nig
 body.dark {
     background-color: #111;
 }
-body.dark .schedule table, body.dark .schedule table th, body.dark .schedule table td, body.dark .schedule table tbody tr, body.dark #bookmarksBody {
+body.dark .schedule table, body.dark .schedule table th, body.dark .schedule table td, body.dark .schedule table tbody tr, body.dark #bookmarksBody, body.night .schedule table, body.night .schedule table th, body.night .schedule table td, body.night .schedule table tbody tr, body.night #bookmarksBody {
     border: 1px solid white;
 }
-body.dark #bookmarksBody li:not(:last-child) {
+body.dark #bookmarksBody li:not(:last-child), body.night #bookmarksBody li:not(:last-child) {
     border-bottom: 1px solid white;
 }
 body.sunset {

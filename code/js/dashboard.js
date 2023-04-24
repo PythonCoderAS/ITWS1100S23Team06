@@ -679,7 +679,6 @@ const dashboard = {
         const weatherIcon = data.weather[0].icon;
         const curTemp = data.main.temp;
         $("#weatherSymbol").prop("src", `https://openweathermap.org/img/wn/${weatherIcon}.png`);
-        console.log(curTemp);
         $("#weatherTempNum").text(Math.round(curTemp));
       }
     ).catch(
